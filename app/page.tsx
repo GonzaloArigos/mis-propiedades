@@ -113,6 +113,18 @@ export default function Page() {
     load();
   };
 
+  const handleSaveDescripcion = async (id: number, descripcion: string) => {
+    const prop = properties.find(p => p.id === id);
+    if (!prop) return;
+    await fetch(`/api/property/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...prop, descripcion }),
+    });
+    load();
+  };
+
+
   const avgPrice = filtered.length > 0
     ? Math.round(filtered.reduce((s, p) => s + p.precio, 0) / filtered.length)
     : 0;
@@ -194,7 +206,7 @@ export default function Page() {
               </select>
               <select className={selectClass} style={selectStyle} value={filterAmbientes} onChange={e => setFilterAmbientes(e.target.value)}>
                 <option value="">Ambientes</option>
-                {[1,2,3,4].map(n => <option key={n} value={n}>{n} amb.</option>)}
+                {[1, 2, 3, 4].map(n => <option key={n} value={n}>{n} amb.</option>)}
               </select>
               <select className={selectClass} style={selectStyle} value={filterCochera} onChange={e => setFilterCochera(e.target.value)}>
                 <option value="">Cochera</option>
@@ -219,7 +231,7 @@ export default function Page() {
               >
                 {sortAsc ? '↑ Ascendente' : '↓ Descendente'}
               </button>
-              
+
               <label className="flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer text-sm font-medium transition-colors hover:bg-white" style={selectStyle}>
                 <input
                   type="checkbox"
@@ -260,6 +272,7 @@ export default function Page() {
                 index={i}
                 onEdit={() => { setEditTarget(p); setShowForm(true); }}
                 onDelete={() => setDeleteId(p.id)}
+                onSaveDescripcion={handleSaveDescripcion}
               />
             ))}
           </div>
