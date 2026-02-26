@@ -16,20 +16,22 @@ export interface Property {
   tiempoAlTrabajo: number;
   descartado: string;
   motivo: string;
+  visitado: string;
 }
 
 const SHEET_ID = process.env.GOOGLE_SHEET_ID!;
 const SHEET_NAME = 'Propiedades';
 
-// Headers in order — must match the sheet columns exactly
 const HEADERS = [
   'Zona', 'Descripción', 'Dirección', 'Link', 'Ambientes', 'Precio',
   'Expensas', 'Cochera', 'Antigüedad', 'Metros Totales', 'Metros Cubiertos',
-  'Tiempo al trabajo', 'Descartado', 'MOTIVO',
+  'Tiempo al trabajo', 'Descartado', 'MOTIVO', 'Visitado'
 ];
 
+// Derive the last column letter from HEADERS length — no more hardcoded "N"
+const LAST_COL = String.fromCharCode(64 + HEADERS.length); // 15 cols = "O"
+
 function getAuth() {
-  // Vercel stores the JSON key as a single env var string
   const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON!);
   return new google.auth.GoogleAuth({
     credentials,
@@ -45,7 +47,7 @@ async function getSheets() {
 function rowToProperty(row: string[], id: number): Property {
   const [zona, descripcion, direccion, link, ambientes, precio, expensas,
     cochera, antiguedad, metrosTotales, metrosCubiertos, tiempoAlTrabajo,
-    descartado, motivo] = row;
+    descartado, motivo, visitado] = row;
   return {
     id,
     zona: zona ?? '',
@@ -62,6 +64,7 @@ function rowToProperty(row: string[], id: number): Property {
     tiempoAlTrabajo: Number(tiempoAlTrabajo ?? 0),
     descartado: descartado ?? 'NO',
     motivo: motivo ?? '',
+    visitado: visitado ?? 'NO',
   };
 }
 
@@ -71,7 +74,7 @@ function propertyToRow(p: Omit<Property, 'id'>): string[] {
     String(p.ambientes), String(p.precio), String(p.expensas),
     p.cochera, String(p.antiguedad), String(p.metrosTotales),
     String(p.metrosCubiertos), String(p.tiempoAlTrabajo),
-    p.descartado, p.motivo,
+    p.descartado, p.motivo, p.visitado,
   ];
 }
 
@@ -79,7 +82,7 @@ export async function ensureHeaders() {
   const sheets = await getSheets();
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A1:N1`,
+    range: `${SHEET_NAME}!A1:${LAST_COL}1`,
   });
   const firstRow = res.data.values?.[0];
   if (!firstRow || firstRow[0] !== 'Zona') {
@@ -96,7 +99,7 @@ export async function readProperties(): Promise<Property[]> {
   const sheets = await getSheets();
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A2:N`,
+    range: `${SHEET_NAME}!A2:${LAST_COL}`,  // was hardcoded to N
   });
   const rows = res.data.values ?? [];
   return rows
@@ -106,10 +109,9 @@ export async function readProperties(): Promise<Property[]> {
 
 export async function writeProperties(properties: Property[]): Promise<void> {
   const sheets = await getSheets();
-  // Clear existing data rows (keep header)
   await sheets.spreadsheets.values.clear({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A2:N`,
+    range: `${SHEET_NAME}!A2:${LAST_COL}`,  // was hardcoded to N
   });
   if (properties.length === 0) return;
   await sheets.spreadsheets.values.update({

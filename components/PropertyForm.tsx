@@ -18,6 +18,7 @@ interface Property {
   tiempoAlTrabajo: number;
   descartado: string;
   motivo: string;
+  visitado: string;
 }
 
 const ZONAS = ['Villa Devoto', 'Villa Urquiza', 'Villa Ballester', 'San Martin', 'Saavedra', 'Villa Pureyredon', 'Otra'];
@@ -37,6 +38,7 @@ const EMPTY: Omit<Property, 'id'> = {
   tiempoAlTrabajo: 0,
   descartado: 'NO',
   motivo: '',
+  visitado: 'NO',
 };
 
 // Defined OUTSIDE the component — if inside, React remounts the element
@@ -92,6 +94,13 @@ export default function PropertyForm({ initial, onSave, onClose }: Props) {
           <Field label="Ambientes">
             <select className={inputClass} style={inputStyle} value={form.ambientes} onChange={e => set('ambientes', Number(e.target.value))}>
               {[1,2,3,4,5].map(n => <option key={n} value={n}>{n}</option>)}
+            </select>
+          </Field>
+
+          <Field label="Visitado">
+            <select className={inputClass} style={inputStyle} value={form.visitado} onChange={e => set('visitado', e.target.value)}>
+              <option value="NO">No</option>
+              <option value="SI">Sí</option>
             </select>
           </Field>
 

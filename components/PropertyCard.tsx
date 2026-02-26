@@ -17,6 +17,7 @@ interface Property {
   tiempoAlTrabajo: number;
   descartado: string;
   motivo: string;
+  visitado: string;
 }
 
 interface Props {
@@ -90,6 +91,16 @@ export default function PropertyCard({ property: p, index, onEdit, onDelete }: P
             )}
           </div>
         </div>
+        {
+          p.visitado === 'SI' ? (
+            <div className="text-xs px-3 py-2 rounded-lg bg-green-50 text-green-500 font-medium">
+              ✓ Visitado
+            </div>
+          ) : (
+            <div className="text-xs px-3 py-2 rounded-lg bg-gray-50 text-gray-500 font-medium">
+              ✗ No visitado
+            </div>
+          )}
 
         {/* Description */}
         {p.descripcion && (

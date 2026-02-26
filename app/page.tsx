@@ -20,6 +20,7 @@ interface Property {
   tiempoAlTrabajo: number;
   descartado: string;
   motivo: string;
+  visitado: string;
 }
 
 type SortKey = 'precio' | 'metrosCubiertos' | 'tiempoAlTrabajo' | 'zona';
@@ -46,6 +47,7 @@ export default function Page() {
     try {
       const res = await fetch('/api/properties');
       const data = await res.json();
+      console.log('Loaded properties:', data);
       setProperties(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error('Failed to load properties:', e);
@@ -130,7 +132,7 @@ export default function Page() {
               </div>
               <div>
                 <h1 className="font-display text-xl font-bold leading-none" style={{ color: 'var(--dark)' }}>
-                  Mis Propiedades
+                  Mis Propiedades - Gonzalo Arigos
                 </h1>
                 <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>
                   {filtered.length} propiedades{avgPrice > 0 ? ` · Promedio USD ${avgPrice.toLocaleString()}` : ''}
@@ -147,14 +149,6 @@ export default function Page() {
               >
                 <RefreshCw size={16} style={{ color: 'var(--muted)' }} />
               </button>
-              <a
-                href="/Deptos.xlsx"
-                download
-                className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl border text-sm font-medium transition-colors hover:bg-white"
-                style={{ borderColor: 'var(--border)', color: 'var(--dark)' }}
-              >
-                <Download size={14} /> Excel
-              </a>
               <button
                 onClick={() => { setEditTarget(null); setShowForm(true); }}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
@@ -225,6 +219,7 @@ export default function Page() {
               >
                 {sortAsc ? '↑ Ascendente' : '↓ Descendente'}
               </button>
+              
               <label className="flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer text-sm font-medium transition-colors hover:bg-white" style={selectStyle}>
                 <input
                   type="checkbox"
