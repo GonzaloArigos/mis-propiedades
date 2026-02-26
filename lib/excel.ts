@@ -36,7 +36,6 @@ function openWorkbook(): XLSX.WorkBook {
 }
 
 function rowToProperty(row: Record<string, unknown>, id: number): Property {
-    console.log("precio",row);
   return {
     id,
     zona: String(row['Zona'] ?? ''),

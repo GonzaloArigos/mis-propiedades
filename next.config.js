@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverExternalPackages: ['xlsx'],
+  serverExternalPackages: ['googleapis'],
 }
-
 module.exports = nextConfig

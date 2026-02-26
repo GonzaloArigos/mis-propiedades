@@ -81,13 +81,13 @@ export default function PropertyCard({ property: p, index, onEdit, onDelete }: P
           </div>
           <div className="text-right shrink-0">
             <div className="font-display text-xl font-bold" style={{ color: 'var(--dark)' }}>
-              USD {p.precio.toLocaleString()}
+              USD {p.precio && p.precio.toLocaleString()}
             </div>
-            {p.expensas > 0 ? (
+            {p.expensas > 0 && (
               <div className="text-xs" style={{ color: 'var(--muted)' }}>
                 + ${p.expensas.toLocaleString()} exp.
               </div>
-            ) : "No Especifica"}
+            )}
           </div>
         </div>
 

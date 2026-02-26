@@ -1,57 +1,55 @@
-# 🏠 Mis Propiedades - Catálogo Inmobiliario
+# 🏠 Mis Propiedades
 
-App Next.js para gestionar propiedades en búsqueda. Lee y escribe directamente desde/hacia un archivo Excel (`Deptos.xlsx`).
+App Next.js con catálogo de propiedades. Los datos se guardan en **Google Sheets** y funcionan perfectamente en Vercel.
 
-## 📋 Características
+---
 
-- Catálogo visual con tarjetas de propiedades
-- Filtros por zona, ambientes, cochera
-- Búsqueda por texto
-- Ordenamiento por precio, metros, tiempo al trabajo
-- Agregar / editar / eliminar propiedades
-- Todo se guarda directamente en el Excel
-- Descarga del Excel actualizado
+## ⚙️ Setup Google Sheets (una sola vez)
 
-## 🚀 Deploy en Vercel
+### 1. Crear proyecto y credenciales en Google Cloud
 
-### ⚠️ Importante sobre el archivo Excel
+1. Ir a [console.cloud.google.com](https://console.cloud.google.com)
+2. Crear un proyecto nuevo (ej: "deptos-app")
+3. Buscar **"Google Sheets API"** → Enable
+4. Ir a **Credenciales** → Crear credencial → **Cuenta de servicio**
+5. Ponerle un nombre cualquiera → Crear → Rol: **Editor** → Listo
+6. Click en la cuenta de servicio → pestaña **Claves** → Agregar clave → **JSON**
+   - Se descarga un archivo `.json` — **guardalo bien**
 
-El archivo `Deptos.xlsx` vive en `/public`. **En Vercel, el filesystem es de solo lectura**, por lo que los cambios (agregar/editar/eliminar) no persisten entre deployments.
+### 2. Crear el Google Sheet
 
-**Para uso con persistencia real en producción**, hay dos opciones:
+1. Crear un Google Sheet nuevo en [sheets.google.com](https://sheets.google.com)
+2. Renombrar la primera hoja a **`Propiedades`** (click derecho en la pestaña)
+3. Copiar el **ID** de la URL:
+   ```
+   https://docs.google.com/spreadsheets/d/ *** ESTE_ES_EL_ID *** /edit
+   ```
+4. **Compartir** el sheet con el `client_email` que está dentro del JSON descargado
+   - Darle permiso de **Editor**
 
-### Opción A: Google Sheets API (recomendado para Vercel)
-Reemplazar `lib/excel.ts` para leer/escribir desde Google Sheets.
+### 3. Configurar variables de entorno
 
-### Opción B: Railway / Render (más simple)
-Deployar en una plataforma que permita filesystem mutable:
-1. Subir repo a GitHub
-2. Crear nuevo proyecto en [Railway.app](https://railway.app)
-3. Conectar con GitHub → Deploy automático
-4. El Excel persiste entre requests
-
-### Opción C: Usar localmente
-```bash
-npm install
-npm run dev
-# Abrir http://localhost:3000
+#### Para desarrollo local — crear `.env.local`:
 ```
-Perfecto para uso local con la vendedora en la misma red o por VPN.
+GOOGLE_SHEET_ID=pegar_el_id_del_sheet
 
-## 🛠️ Setup local
+GOOGLE_SERVICE_ACCOUNT_JSON={"type":"service_account","project_id":"...todo el json en una linea..."}
+```
+> Para poner el JSON en una línea: abrí el archivo JSON, copiá todo el contenido y pegalo como está (Next.js lo maneja bien).
+
+#### Para Vercel — en el dashboard:
+1. Ir al proyecto en vercel.com → **Settings** → **Environment Variables**
+2. Agregar:
+   - `GOOGLE_SHEET_ID` → el ID del sheet
+   - `GOOGLE_SERVICE_ACCOUNT_JSON` → el contenido completo del archivo JSON
+
+---
+
+## 🚀 Correr localmente
 
 ```bash
-# Clonar o descomprimir el proyecto
-cd deptos-app
-
-# Instalar dependencias
 npm install
-
-# Correr en desarrollo
 npm run dev
-
-# Build para producción
-npm run build && npm start
 ```
 
 ## 📁 Estructura
@@ -60,35 +58,13 @@ npm run build && npm start
 deptos-app/
 ├── app/
 │   ├── api/
-│   │   ├── properties/route.ts   # GET todas, POST nueva
-│   │   └── property/[id]/route.ts # PUT editar, DELETE eliminar
-│   ├── page.tsx                  # Página principal del catálogo
-│   ├── layout.tsx
+│   │   ├── properties/route.ts     # GET todas, POST nueva
+│   │   └── property/[id]/route.ts  # PUT editar, DELETE eliminar
+│   ├── page.tsx                    # Catálogo principal
 │   └── globals.css
 ├── components/
-│   ├── PropertyCard.tsx          # Tarjeta de propiedad
-│   └── PropertyForm.tsx          # Modal de formulario
-├── lib/
-│   └── excel.ts                  # Lectura/escritura del Excel
-└── public/
-    └── Deptos.xlsx               # 📊 TU ARCHIVO DE DATOS
+│   ├── PropertyCard.tsx
+│   └── PropertyForm.tsx
+└── lib/
+    └── sheets.ts                   # Toda la lógica de Google Sheets
 ```
-
-## 📊 Columnas del Excel
-
-| Columna | Descripción |
-|---------|-------------|
-| Zona | Barrio |
-| Descripción | Notas sobre la propiedad |
-| Dirección | Link Google Maps |
-| Link | URL de la publicación |
-| Ambientes | Número de ambientes |
-| Precio | Precio en USD |
-| Expensas | Expensas en $ |
-| Cochera | SI / NO |
-| Antigüedad | Años del edificio |
-| Metros Totales | m² totales |
-| Metros Cubiertos | m² cubiertos |
-| Tiempo al trabajo | Minutos en transporte |
-| Descartado | SI / NO |
-| MOTIVO | Motivo de descarte |

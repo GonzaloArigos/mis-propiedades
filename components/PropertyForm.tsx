@@ -103,7 +103,7 @@ export default function PropertyForm({ initial, onSave, onClose }: Props) {
                 rows={3}
                 value={form.descripcion}
                 onChange={e => set('descripcion', e.target.value)}
-                placeholder="Una opinion, si hay algo para consultar, etc... Ejemplo: preguntar si la cochera es techada, si baja el precio, ojo que es un primer piso etc"
+                placeholder="Ej: A estrenar, piso 3, con amenities..."
               />
             </Field>
           </div>

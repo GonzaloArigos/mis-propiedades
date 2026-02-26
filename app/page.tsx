@@ -130,7 +130,7 @@ export default function Page() {
               </div>
               <div>
                 <h1 className="font-display text-xl font-bold leading-none" style={{ color: 'var(--dark)' }}>
-                  Gonzalo Arigos - Mis Propiedades
+                  Mis Propiedades
                 </h1>
                 <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>
                   {filtered.length} propiedades{avgPrice > 0 ? ` · Promedio USD ${avgPrice.toLocaleString()}` : ''}
@@ -200,7 +200,7 @@ export default function Page() {
               </select>
               <select className={selectClass} style={selectStyle} value={filterAmbientes} onChange={e => setFilterAmbientes(e.target.value)}>
                 <option value="">Ambientes</option>
-                {[1, 2, 3, 4].map(n => <option key={n} value={n}>{n} amb.</option>)}
+                {[1,2,3,4].map(n => <option key={n} value={n}>{n} amb.</option>)}
               </select>
               <select className={selectClass} style={selectStyle} value={filterCochera} onChange={e => setFilterCochera(e.target.value)}>
                 <option value="">Cochera</option>
