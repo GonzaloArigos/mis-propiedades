@@ -169,7 +169,7 @@ export default function PropertyCard({ property: p, index, onEdit, onDelete, onS
           {p.descripcion ? (
             <button
               onClick={() => setShowDescModal(true)}
-              className="text-left text-sm leading-relaxed line-clamp-3 rounded-lg px-3 py-2 transition-colors hover:bg-orange-50 -mx-3"
+              className="text-left text-xs leading-relaxed line-clamp-6 rounded-lg px-3 py-2 transition-colors hover:bg-orange-50 -mx-3"
               style={{ color: 'var(--muted)' }}
               title="Click para ver y editar"
             >
@@ -210,7 +210,7 @@ export default function PropertyCard({ property: p, index, onEdit, onDelete, onS
             <a href={p.link} target="_blank" rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-lg transition-colors hover:opacity-80"
               style={{ background: `${zoneColor}15`, color: zoneColor }}>
-              <ExternalLink size={12} /> Ver publicación
+              <ExternalLink size={12} /> Publicación
             </a>
           )}
           {p.direccion && p.direccion !== 'MAPS' && (
