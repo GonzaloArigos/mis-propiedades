@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Mis Propiedades",
+  title: "Gonzalo Arigos - Mis Propiedades",
   description: "Catálogo de propiedades para comprar",
 };
 
