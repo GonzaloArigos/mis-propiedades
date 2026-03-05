@@ -65,7 +65,7 @@ export default function Page() {
     let list = [...properties];
 
     if (showDescartados) list = list.filter(p => p.descartado === 'SI');
-    if (showDescartados) list = list.filter(p => p.descartado === 'NO');
+    if (!showDescartados) list = list.filter(p => p.descartado === 'NO');
     if (filterZona) list = list.filter(p => p.zona === filterZona);
     if (filterAmbientes) list = list.filter(p => p.ambientes === Number(filterAmbientes));
     if (filterCochera) list = list.filter(p => p.cochera === filterCochera);
